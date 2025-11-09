@@ -116,10 +116,8 @@ export const executeToolViaOpenAPI = async (req: Request, res: Response): Promis
         (t: any) => t.name === fullToolName || t.name === toolName,
       );
       if (tool) {
-        if(tool.name) {
-          toolName=tool.name; // The 'handleCallToolRequest' method makes a call based on the real tool name.
-        }
-        if(tool.inputSchema) {
+        toolName = tool.name; // Use the matched tool's actual name (with server prefix if applicable) for the subsequent call to handleCallToolRequest.
+        if (tool.inputSchema) {
           inputSchema = tool.inputSchema as Record<string, any>;
         }
       }
