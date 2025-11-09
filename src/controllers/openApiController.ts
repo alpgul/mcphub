@@ -100,7 +100,7 @@ export const executeToolViaOpenAPI = async (req: Request, res: Response): Promis
   try {
     // Decode URL-encoded parameters to handle slashes in server/tool names
     const serverName = decodeURIComponent(req.params.serverName);
-    const toolName = decodeURIComponent(req.params.toolName);
+    let toolName = decodeURIComponent(req.params.toolName);
 
     // Import handleCallToolRequest function
     const { handleCallToolRequest } = await import('../services/mcpService.js');
@@ -115,8 +115,13 @@ export const executeToolViaOpenAPI = async (req: Request, res: Response): Promis
       const tool = serverInfo.tools.find(
         (t: any) => t.name === fullToolName || t.name === toolName,
       );
-      if (tool && tool.inputSchema) {
-        inputSchema = tool.inputSchema as Record<string, any>;
+      if (tool) {
+        if(tool.name) {
+          toolName=tool.name; // The 'handleCallToolRequest' method makes a call based on the real tool name.
+        }
+        if(tool.inputSchema) {
+          inputSchema = tool.inputSchema as Record<string, any>;
+        }
       }
     }
 
